@@ -18,7 +18,9 @@ class ThriftPluginTest extends Specification {
     }
 
     def cleanup(){
-        destinationDirectory.eachFile{it.deleteDir()}
+        if (destinationDirectory.exists()) {
+            destinationDirectory.eachFile{it.deleteDir()}
+        }
     }
 
     def "compileScrooge is available    "() {
@@ -51,7 +53,6 @@ class ThriftPluginTest extends Specification {
         ThriftCompile compileThrift = project.tasks.compileThrift
         compileThrift.output = destinationDirectory
         compileThrift.source = thriftDirectory.listFiles().toList()
-        compileThrift.opts = ["-finagle"]
 
         when:
         compileThrift.compile()
