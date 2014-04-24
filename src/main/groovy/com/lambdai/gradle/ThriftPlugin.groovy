@@ -40,7 +40,6 @@ class ThriftPlugin implements Plugin<Project> {
             // TODO add scala source dir
             sourceSet.allSource.source(sourceSet.thrift)
             sourceSet.resources.filter.exclude { FileTreeElement element -> sourceSet.thrift.contains(element.file) }
-
             configureThriftCompile(sourceSet)
         }
     }
@@ -56,13 +55,17 @@ class ThriftPlugin implements Plugin<Project> {
     ]
 
     private void configureThriftCompile(SourceSet sourceSet) {
+        if (sourceSet.name == sourceSet.TEST_SOURCE_SET_NAME) return; // This is a hack
+
         languages.each { String lang ->
             def taskName = sourceSet.getCompileTaskName(thriftTask[lang])
             ThriftCompile thriftCompile = project.tasks.create(taskName, compileTaskClass[lang])
             thriftCompile.description = "Compiles the $sourceSet.thrift."
             thriftCompile.source = sourceSet.thrift
-            thriftCompile.output = project.file(genDir + lang)
-            sourceSet.scala.srcDir { thriftCompile.output }
+            thriftCompile.output = project.file(genDir + sourceSet.name + "/" + lang)
+            if (lang == "scala") {
+                sourceSet.scala.srcDir { thriftCompile.output }
+            }
 
             project.tasks[sourceSet.getCompileTaskName(lang)].dependsOn(taskName)
         }
