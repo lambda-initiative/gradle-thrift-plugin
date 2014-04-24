@@ -1,5 +1,6 @@
 gradle-thrift-plugin
 =====================
+[![Build Status](https://travis-ci.org/lambda-initiative/gradle-thrift-plugin.svg?branch=master)](https://travis-ci.org/lambda-initiative/gradle-thrift-plugin)
 
 the code is original based on https://github.com/iamsteveholmes/scrooge-gradle-plugin
 
