@@ -7,6 +7,6 @@ import org.gradle.api.tasks.TaskAction;
 class ThriftClean extends DefaultTask {
     @TaskAction
     def cleanThrfit() {
-        project.file("src/gen/scala").deleteDir()
+        project.file("src/gen").deleteDir()
     }
 }

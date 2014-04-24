@@ -1,6 +1,7 @@
 package com.lambdai.gradle
 
 import com.lambdai.gradle.tasks.*
+import com.lambdai.gradle.tasks.ThriftScalaCompile
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.file.FileTreeElement
@@ -11,13 +12,16 @@ class ThriftPlugin implements Plugin<Project> {
 
     public static final String CLEAN_THRIFT_TASK = 'cleanThrift'
     private Project project
+    def languages = ["scala"]
+    def genDir = "src/gen/"
 
     @Override
     void apply(final Project project) { // Currently only deal with scala
         this.project = project
 
-        // TODO support multiple language
-        project.apply plugin: 'scala'
+        languages.each { String lang ->
+            project.apply plugin: lang
+        }
 
         project.task(CLEAN_THRIFT_TASK, type: ThriftClean) {
             group = 'Thrift'
@@ -40,14 +44,27 @@ class ThriftPlugin implements Plugin<Project> {
             configureThriftCompile(sourceSet)
         }
     }
-    private void configureThriftCompile(SourceSet sourceSet) {
-        def taskName = sourceSet.getCompileTaskName('thrift')
-        ThriftCompile thriftCompile = project.tasks.create(taskName, ThriftCompile)
-        thriftCompile.description = "Compiles the $sourceSet.thrift."
-        thriftCompile.source = sourceSet.thrift
-//        thriftCompile.output = project.file("src/gen/scala")
 
-        // TODO for different language, set different dependency
-        project.tasks[sourceSet.getCompileTaskName('scala')].dependsOn(taskName)
+    def compileTaskClass = [
+        scala: ThriftScalaCompile,
+        java: ThriftJavaCompiler
+    ]
+
+    def thriftTask = [
+        scala: "scrooge",
+        java: "thriftJava"
+    ]
+
+    private void configureThriftCompile(SourceSet sourceSet) {
+        languages.each { String lang ->
+            def taskName = sourceSet.getCompileTaskName(thriftTask[lang])
+            ThriftCompile thriftCompile = project.tasks.create(taskName, compileTaskClass[lang])
+            thriftCompile.description = "Compiles the $sourceSet.thrift."
+            thriftCompile.source = sourceSet.thrift
+            thriftCompile.output = project.file(genDir + lang)
+            sourceSet.scala.srcDir { thriftCompile.output }
+
+            project.tasks[sourceSet.getCompileTaskName(lang)].dependsOn(taskName)
+        }
     }
 }

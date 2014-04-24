@@ -15,6 +15,7 @@ class ThriftPluginTest extends Specification {
 
     def setup() {
         project.apply plugin: 'thrift-plugin'
+        // TODO set language
     }
 
     def cleanup(){
@@ -25,12 +26,12 @@ class ThriftPluginTest extends Specification {
 
     def "compileScrooge is available    "() {
         expect:
-        project.tasks.compileThrift instanceof ThriftCompile
+        project.tasks.compileScrooge instanceof ThriftCompile
     }
 
     def "compile builds 2 scala files"() {
         given:
-        ThriftCompile compileThrift = project.tasks.compileThrift
+        ThriftCompile compileThrift = project.tasks.compileScrooge
         compileThrift.output = destinationDirectory
         compileThrift.source = thriftDirectory.listFiles().toList()
 
@@ -50,7 +51,7 @@ class ThriftPluginTest extends Specification {
     def "compile builds 2 scala files with finagle options set"() {
 
         given:
-        ThriftCompile compileThrift = project.tasks.compileThrift
+        ThriftCompile compileThrift = project.tasks.compileScrooge
         compileThrift.output = destinationDirectory
         compileThrift.source = thriftDirectory.listFiles().toList()
 
