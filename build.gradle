@@ -3,27 +3,27 @@ apply plugin: 'scala'
 apply plugin: 'groovy'
 
 repositories {
-    mavenCentral()
+  mavenCentral()
 }
 
 if (!hasProperty('scalaVersion')) {
-    scalaVersion = '2.10.4'
+  ext.scalaVersion = '2.10.4'
 }
 def (major, minor, trivial) = scalaVersion.tokenize('.')
-scalaLevel = major + "." + minor
+ext.scalaLevel = major + "." + minor
 
 if (!hasProperty('scroogeVersion')) {
-    scroogeVersion = '3.13.2'
+  ext.scroogeVersion = '3.14.1'
 }
 
 dependencies {
-    compile gradleApi()
-    compile localGroovy()
-    compile("com.twitter:scrooge-generator_${scalaLevel}:${scroogeVersion}")
-    compile("org.scala-lang:scala-library:${scalaVersion}")
-    testCompile ('org.spockframework:spock-core:0.7-groovy-1.8') {
-        exclude module: "groovy-all"
-    }
+  compile gradleApi()
+  compile localGroovy()
+  compile("com.twitter:scrooge-generator_${scalaLevel}:${scroogeVersion}")
+  compile("org.scala-lang:scala-library:${scalaVersion}")
+  testCompile('org.spockframework:spock-core:0.7-groovy-1.8') {
+    exclude module: "groovy-all"
+  }
 }
 
 tasks.compileGroovy.dependsOn(tasks.compileScala)
