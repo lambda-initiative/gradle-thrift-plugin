@@ -1,4 +1,4 @@
-package com.lambdai.gradle;
+package com.lambdalab.gradle;
 
 import groovy.lang.Closure;
 import org.gradle.api.file.SourceDirectorySet;

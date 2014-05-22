@@ -1,7 +1,7 @@
-package com.lambdai.gradle
+package com.lambdalab.gradle
 
-import com.lambdai.gradle.tasks.*
-import com.lambdai.gradle.tasks.ThriftScalaCompile
+import com.lambdalab.gradle.tasks.*
+import com.lambdalab.gradle.tasks.ThriftScalaCompile
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.file.FileTreeElement

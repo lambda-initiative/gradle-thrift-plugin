@@ -1,6 +1,6 @@
-package com.lambdai.gradle
+package com.lambdalab.gradle
 
-import com.lambdai.gradle.tasks.*
+import com.lambdalab.gradle.tasks.*
 
 import groovy.io.FileType
 import org.gradle.api.Project

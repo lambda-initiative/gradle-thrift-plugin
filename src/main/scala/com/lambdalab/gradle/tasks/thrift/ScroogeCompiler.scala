@@ -1,4 +1,4 @@
-package com.lambdai.gradle.tasks.thrift
+package com.lambdalab.gradle.tasks.thrift
 
 import collection.JavaConversions._
 import com.twitter.scrooge.{Main, Compiler}

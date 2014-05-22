@@ -1,7 +1,6 @@
-package com.lambdai.gradle.tasks
+package com.lambdalab.gradle.tasks
 
-import com.lambdai.gradle.tasks.ThriftCompile
-import com.lambdai.gradle.tasks.thrift.ScroogeCompiler
+import com.lambdalab.gradle.tasks.thrift.ScroogeCompiler
 import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.Optional
 import org.gradle.api.tasks.TaskAction
