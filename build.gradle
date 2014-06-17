@@ -12,14 +12,10 @@ if (!hasProperty('scalaVersion')) {
 def (major, minor, trivial) = scalaVersion.tokenize('.')
 ext.scalaLevel = major + "." + minor
 
-if (!hasProperty('scroogeVersion')) {
-  ext.scroogeVersion = '3.14.1'
-}
-
 dependencies {
   compile gradleApi()
   compile "org.codehaus.groovy:groovy-all:1.8.6"
-  compile("com.twitter:scrooge-generator_${scalaLevel}:${scroogeVersion}")
+  compile("com.twitter:scrooge-generator_${scalaLevel}:3.+")
   compile("org.scala-lang:scala-library:${scalaVersion}")
   testCompile('org.spockframework:spock-core:0.7-groovy-1.8') {
     exclude module: "groovy-all"
