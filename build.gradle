@@ -14,7 +14,7 @@ ext.scalaLevel = major + "." + minor
 
 dependencies {
   compile gradleApi()
-  compile "org.codehaus.groovy:groovy-all:1.8.6"
+  compile localGroovy()
   compile("com.twitter:scrooge-generator_${scalaLevel}:3.+")
   compile("org.scala-lang:scala-library:${scalaVersion}")
   testCompile('org.spockframework:spock-core:0.7-groovy-1.8') {
