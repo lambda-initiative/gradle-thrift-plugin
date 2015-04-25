@@ -4,6 +4,9 @@ apply plugin: 'groovy'
 
 repositories {
   mavenCentral()
+  maven {
+    url "http://maven.twttr.com"
+  }
 }
 
 if (!hasProperty('scalaVersion')) {
