@@ -67,6 +67,14 @@ class ThriftPlugin implements Plugin<Project> {
                 sourceSet.scala.srcDir { thriftCompile.output }
             }
 
+            if (project.plugins.hasPlugin("idea")) {
+                project.idea {
+                    module {
+                        generatedSourceDirs += thriftCompile.output
+                    }
+                }
+            }
+
             project.tasks[sourceSet.getCompileTaskName(lang)].dependsOn(taskName)
         }
     }
