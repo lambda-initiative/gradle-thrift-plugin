@@ -10,10 +10,10 @@ repositories {
 }
 
 if (!hasProperty('scalaVersion')) {
-  ext.scalaVersion = '2.10.4'
+  ext.scalaVersion = '2.10.5'
 }
 if (!hasProperty('scroogeVersion')) {
-  ext.scroogeVersion = "3.17.0"
+  ext.scroogeVersion = "3.20.0"
 }
 def (major, minor, trivial) = scalaVersion.tokenize('.')
 ext.scalaLevel = major + "." + minor
