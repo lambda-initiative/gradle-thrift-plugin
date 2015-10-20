@@ -10,72 +10,74 @@ import org.gradle.api.tasks.SourceSet
 
 class ThriftPlugin implements Plugin<Project> {
 
-    public static final String CLEAN_THRIFT_TASK = 'cleanThrift'
-    private Project project
-    def languages = ["scala"]
-    def genDir = "src/gen/"
+  public static final String CLEAN_THRIFT_TASK = 'cleanThrift'
+  private Project project
+  def languages = ["scala"]
+  def genDir = "src/gen/"
 
-    @Override
-    void apply(final Project project) { // Currently only deal with scala
-        this.project = project
+  @Override
+  void apply(final Project project) { // Currently only deal with scala
+    this.project = project
 
-        languages.each { String lang ->
-            project.apply plugin: lang
-        }
-
-        project.task(CLEAN_THRIFT_TASK, type: ThriftClean) {
-            group = 'Thrift'
-            description = 'Delete the output directories for each compiled language.'
-        }
-        project.tasks[BasePlugin.CLEAN_TASK_NAME].dependsOn(CLEAN_THRIFT_TASK)
-
-        configureSourceSetDefaults()
+    languages.each { String lang ->
+      project.apply plugin: lang
     }
 
-    private void configureSourceSetDefaults() {
-        project.sourceSets.all { SourceSet sourceSet ->
-            sourceSet.convention.plugins.thrift = new DefaultThriftSourceSet(sourceSet.displayName, project.getFileResolver())
-            sourceSet.thrift.srcDir { project.file("src/$sourceSet.name/thrift") }
-
-            // TODO add scala source dir
-            sourceSet.allSource.source(sourceSet.thrift)
-            sourceSet.resources.filter.exclude { FileTreeElement element -> sourceSet.thrift.contains(element.file) }
-            configureThriftCompile(sourceSet)
-        }
+    project.task(CLEAN_THRIFT_TASK, type: ThriftClean) {
+      group = 'Thrift'
+      description = 'Delete the output directories for each compiled language.'
     }
+    project.tasks[BasePlugin.CLEAN_TASK_NAME].dependsOn(CLEAN_THRIFT_TASK)
 
-    def compileTaskClass = [
-        scala: ThriftScalaCompile,
-        java: ThriftJavaCompiler
-    ]
+    configureSourceSetDefaults()
+  }
 
-    def thriftTask = [
-        scala: "scrooge",
-        java: "thriftJava"
-    ]
+  private void configureSourceSetDefaults() {
+    project.sourceSets.all { SourceSet sourceSet ->
+      sourceSet.convention.plugins.thrift = new DefaultThriftSourceSet(sourceSet.displayName, project.getFileResolver())
+      sourceSet.thrift.srcDir { project.file("src/$sourceSet.name/thrift") }
 
-    private void configureThriftCompile(SourceSet sourceSet) {
-        if (sourceSet.name == sourceSet.TEST_SOURCE_SET_NAME) return; // This is a hack
-
-        languages.each { String lang ->
-            def taskName = sourceSet.getCompileTaskName(thriftTask[lang])
-            ThriftCompile thriftCompile = project.tasks.create(taskName, compileTaskClass[lang])
-            thriftCompile.description = "Compiles the $sourceSet.thrift."
-            thriftCompile.source = sourceSet.thrift
-            thriftCompile.output = project.file(genDir + sourceSet.name + "/" + lang)
-            if (lang == "scala") {
-                sourceSet.scala.srcDir { thriftCompile.output }
-            }
-
-            if (project.plugins.hasPlugin("idea")) {
-                project.idea {
-                    module {
-                        generatedSourceDirs += thriftCompile.output
-                    }
-                }
-            }
-
-            project.tasks[sourceSet.getCompileTaskName(lang)].dependsOn(taskName)
-        }
+      // TODO add scala source dir
+      sourceSet.allSource.source(sourceSet.thrift)
+      sourceSet.resources.filter.exclude { FileTreeElement element -> sourceSet.thrift.contains(element.file) }
+      configureThriftCompile(sourceSet)
     }
+  }
+
+  def compileTaskClass = [
+      scala: ThriftScalaCompile,
+      java : ThriftJavaCompiler
+  ]
+
+  def thriftTask = [
+      scala: "scrooge",
+      java : "thriftJava"
+  ]
+
+  private void configureThriftCompile(SourceSet sourceSet) {
+    if (sourceSet.name == sourceSet.TEST_SOURCE_SET_NAME) return; // This is a hack
+
+    languages.each { String lang ->
+      def taskName = sourceSet.getCompileTaskName(thriftTask[lang])
+      ThriftCompile thriftCompile = project.tasks.create(taskName, compileTaskClass[lang])
+      thriftCompile.description = "Compiles the $sourceSet.thrift."
+      thriftCompile.source = sourceSet.thrift
+      thriftCompile.output = project.file(genDir + sourceSet.name + "/" + lang)
+      thriftCompile.outputs.upToDateWhen {false}
+
+      if (lang == "scala") {
+        sourceSet.scala.srcDir { thriftCompile.output }
+      }
+
+      if (project.plugins.hasPlugin("idea")) {
+        project.idea {
+          module {
+            generatedSourceDirs += thriftCompile.output
+          }
+        }
+      }
+
+      project.tasks[sourceSet.getCompileTaskName(lang)].dependsOn(taskName)
+    }
+  }
 }
