@@ -13,7 +13,7 @@ if (!hasProperty('scalaVersion')) {
   ext.scalaVersion = '2.10.5'
 }
 if (!hasProperty('scroogeVersion')) {
-  ext.scroogeVersion = "4.2.0"
+  ext.scroogeVersion = "4.3.0"
 }
 def (major, minor, trivial) = scalaVersion.tokenize('.')
 ext.scalaLevel = major + "." + minor
