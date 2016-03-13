@@ -1,6 +1,16 @@
+plugins {
+  id "com.jfrog.bintray" version "1.6"
+}
+
 apply plugin: 'java'
 apply plugin: 'scala'
 apply plugin: 'groovy'
+
+if (file("..publish.gradle").exists()) {
+  apply from: "../publish.gradle"
+}
+
+version = 0.1
 
 repositories {
   mavenCentral()
@@ -10,10 +20,10 @@ repositories {
 }
 
 if (!hasProperty('scalaVersion')) {
-  ext.scalaVersion = '2.10.5'
+  ext.scalaVersion = '2.10.6'
 }
 if (!hasProperty('scroogeVersion')) {
-  ext.scroogeVersion = "4.3.0"
+  ext.scroogeVersion = "4.6.0"
 }
 def (major, minor, trivial) = scalaVersion.tokenize('.')
 ext.scalaLevel = major + "." + minor
