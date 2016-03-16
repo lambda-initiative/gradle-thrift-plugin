@@ -6,7 +6,7 @@ apply plugin: 'java'
 apply plugin: 'scala'
 apply plugin: 'groovy'
 
-if (file("..publish.gradle").exists()) {
+if (file("../publish.gradle").exists()) {
   apply from: "../publish.gradle"
 }
 
