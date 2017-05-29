@@ -10,7 +10,7 @@ if (file("../publish.gradle").exists()) {
   apply from: "../publish.gradle"
 }
 
-version = "0.4.1"
+version = "0.4.2"
 
 repositories {
   mavenCentral()
@@ -23,7 +23,7 @@ if (!hasProperty('scalaVersion')) {
   ext.scalaVersion = '2.10.6'
 }
 if (!hasProperty('scroogeVersion')) {
-  ext.scroogeVersion = "4.7.0"
+  ext.scroogeVersion = "4.16.0"
 }
 def (major, minor, trivial) = scalaVersion.tokenize('.')
 ext.scalaLevel = major + "." + minor
