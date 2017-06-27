@@ -10,7 +10,7 @@ if (file("../publish.gradle").exists()) {
   apply from: "../publish.gradle"
 }
 
-version = "0.4.2"
+version = "0.5.0"
 
 repositories {
   mavenCentral()
@@ -23,7 +23,7 @@ if (!hasProperty('scalaVersion')) {
   ext.scalaVersion = '2.10.6'
 }
 if (!hasProperty('scroogeVersion')) {
-  ext.scroogeVersion = "4.16.0"
+  ext.scroogeVersion = "4.18.0"
 }
 def (major, minor, trivial) = scalaVersion.tokenize('.')
 ext.scalaLevel = major + "." + minor
@@ -39,4 +39,7 @@ dependencies {
   }
 }
 
-tasks.compileGroovy.dependsOn(tasks.compileScala)
+compileGroovy {
+  classpath = classpath.plus(files(compileScala.destinationDir))
+  dependsOn compileScala
+}
